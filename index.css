@@ -1,0 +1,76 @@
+*{ padding: 0;margin: 0; }
+html, body{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.loading{
+  width: 100%;
+  height: 100%;
+}
+.loading .loadinghead{
+  text-align: center;
+  line-height: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(34, 153, 221, 1);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+
+  animation: toBig linear 3s infinite backwards;
+  -webkit-animation: toBig linear 3s infinite backwards;
+}
+@keyframes toBig{
+  0%{
+    transform: rotate(0);
+    border-radius: 50%;
+  }
+  20%{
+    transform: rotate(180deg);
+    border-radius: 0;
+  }
+  40%{
+    transform: rotate(360deg);
+    border-radius: 50%;
+  }
+  100%{
+    transform: rotate(360deg);
+    border-radius: 50%;
+  }
+}
+@-webkit-keyframes toBig{
+  0%{
+    -webkit-transform: rotate(0);
+    border-radius: 50%;
+  }
+  20%{
+    -webkit-transform: rotate(180deg);
+    border-radius: 0;
+  }
+  40%{
+    -webkit-transform: rotate(360deg);
+    border-radius: 50%;
+  }
+  100%{
+    -webkit-transform: rotate(360deg);
+    border-radius: 50%;
+  }
+}
+.loading .loadinghead .pace-progress{
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+.loading, .main{
+  display: none;
+}
+.stage{
+  position: relative;
+  left: 0;
+  top: 0;
+}

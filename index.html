@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PAPAPA</title>
+  <link rel="stylesheet" href="../index.css">
+</head>
+<body>
+  <div id="loading" class="loading">
+    <div class="loadinghead">
+      <div class="pace-progress"></div>
+    </div>
+  </div>
+  <div class="main">
+    <canvas id="stage" class="stage" width="640" height="1136"></canvas>
+  </div>
+  <script type="text/javascript">
+  function pageUtil(selector){
+      this.ele = document.querySelectorAll(selector)[0];
+      this.scaleNum = document.documentElement.clientWidth/640;
+      return this;
+  }
+  pageUtil.prototype.response = function(height){
+      this.ele.style.cssText = "-webkit-transform-origin: 0 0 0px; -webkit-transform: scale("+this.scaleNum+");position: absolute;width:640px;height:"+ parseInt( height + 1 ) +"px";
+      return this;
+  }
+  new pageUtil('.main').response(1136);
+  </script>
+  <!--<audio id="bgm" preload="" loop="loop" autoplay="autoplay" src="http://news.sohu.com/upload/yf/trump/bgm2.mp3"></audio>-->
+  <script src="http://cdn.bootcss.com/audio5js/0.1.10/audio5.min.js"></script>
+  <script src="http://news.sohu.com/upload/yf/pub/zepto-1.1.6-reload.js"></script>
+  <script src="http://news.sohu.com/upload/yf/pub/create.min.js"></script>
+  <script src="../index.js"></script>
+</body>
+</html>
