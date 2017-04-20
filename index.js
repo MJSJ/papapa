@@ -38,63 +38,100 @@
     }
   }).start();
 
-  // 单例Timer
-  var time = 1000;
-  var getAdo = (function(){
-    var instance;
-    function init(){
-      var audio = new Audio5js({
-        ready: function () {
-          this.load('http://news.sohu.com/upload/yf/trump/bgm2.mp3');
-          this.play();
-          this.on('timeupdate', function (position, duration) {
-            if( position === '00:01' ) {
-              var timer = setInterval(function(){
-                if(time >　duration*1000){
-                  clearInterval(timer)
-                }else{
-                  time += 20
-                  console.log(time)
-                }
-              }, 20);
-            }
-            console.log(position)
-          }, this);
-        }
-      });
-      return audio;
-    }
-    return {
-      getInstance: function(){
-        if(!instance){
-          time = 0;
-          instance = init();
-        }
-        return instance;
-      }
-    }
-  })();
-
   // 主舞台
   function Stage(id){
     this.canvas = document.getElementById(id),
     this.stage = new createjs.Stage(id),
     this.playing = false,
+    this.time = 1000,
     this.temp = {};
   }
+  
   Stage.prototype.init = function(){
     createjs.Touch.enable(this.stage);
     createjs.Ticker.framerate = 60;
     createjs.Ticker.on("tick", this.stage);
 
-    var circle = new createjs.Shape();
-    circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
-    circle.x = 100;
-    circle.y = 100;
+    this.circle = new createjs.Shape();
+    this.circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
+    this.circle.x = 100;
+    this.circle.y = 100;
 
-    circle.addEventListener('click', function(e){
-      getAdo.getInstance()
+    var _this = this;
+    _this.insTimer = undefined;
+    _this.insAdo = undefined;
+
+    this.circle.addEventListener('click', function(e){
+      _this.getAdo().getInstance()
     });
-    this.stage.addChild(circle);
+    this.stage.addChild(this.circle);
+  }
+
+  // 寻找节奏
+  Stage.prototype.checkTemp = function(){
+    var _this = this;
+    // 2200 3100
+    if(this.time % 900 == 400){
+      createjs.Tween.get(this.circle).to({alpha:0}, 100).call(handleComplete);
+      function handleComplete() {
+          createjs.Tween.get(_this.circle).to({alpha:1}, 0);
+      }
+    }
+  }
+
+  // 单例Timer
+  Stage.prototype.getTimer = function(){
+    var _this = this;
+    return (function(_this){
+      function init(){
+        var timer = setInterval(function(){
+          if(_this.time >　430000){
+            clearInterval(timer)
+          }else{
+            _this.time += 20
+            _this.checkTemp()
+          }
+        }, 20);
+        return timer;
+      }
+      return {
+        getInstance: function(){
+          if(!_this.insTimer){
+            _this.time = 1000;
+            _this.insTimer = init();
+          }
+          return _this.insTimer;
+        }
+      }
+    })(_this)
+  }
+
+  // 单例播放
+  Stage.prototype.getAdo = function(){
+    var _this = this;
+    return (function(_this){
+      function init(){
+        var audio = new Audio5js({
+          ready: function () {
+            this.load('http://news.sohu.com/upload/yf/trump/bgm2.mp3');
+            this.play();
+            this.on('timeupdate', function (position, duration) {
+              if( position === '00:01' ) {
+                _this.getTimer().getInstance()
+              }
+            }, this);
+          }
+        });
+        return audio;
+      }
+      return {
+        getInstance: function(){
+          if(!_this.insAdo){
+            _this.insAdo = init();
+          }
+          return _this.insAdo;
+        }
+      }
+    })(_this)
   }
 })();
