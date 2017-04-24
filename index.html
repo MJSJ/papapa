@@ -2,31 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0", user-scalable=no,minimal-ui>
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="yes" name="apple-touch-fullscreen" />
+  <meta content="telephone=no,email=no" name="format-detection" />
   <title>PAPAPA</title>
   <link rel="stylesheet" href="../index.css">
 </head>
-<body>
+<body ontouchstart="event.preventDefault();">
   <div id="loading" class="loading">
     <div class="loadinghead">
       <div class="pace-progress"></div>
     </div>
   </div>
   <div class="main">
-    <canvas id="stage" class="stage" width="640" height="1136"></canvas>
+    <canvas id="stage" class="stage" width="750" height="1335"></canvas>
+    <img src="../imgs/bianzi.png"  alt="">
+    <div class="share">
+      <div class="sharebg">
+        <img src="../imgs/erweima.png" alt="">
+      </div>
+    </div>
   </div>
   <script type="text/javascript">
   function pageUtil(selector){
       this.ele = document.querySelectorAll(selector)[0];
-      this.scaleNum = document.documentElement.clientWidth/640;
+      this.scaleNum = document.documentElement.clientWidth/750;
       return this;
   }
   pageUtil.prototype.response = function(height){
-      this.ele.style.cssText = "-webkit-transform-origin: 0 0 0px; -webkit-transform: scale("+this.scaleNum+");position: absolute;width:640px;height:"+ parseInt( height + 1 ) +"px";
+      this.ele.style.cssText = "-webkit-transform-origin: 0 0 0px; -webkit-transform: scale("+this.scaleNum+");position: absolute;width:750px;height:"+ parseInt( height + 1 ) +"px";
       return this;
   }
-  new pageUtil('.main').response(1136);
+  new pageUtil('.main').response(1334);
   </script>
   <!--<audio id="bgm" preload="" loop="loop" autoplay="autoplay" src="http://news.sohu.com/upload/yf/trump/bgm2.mp3"></audio>-->
   <script src="http://cdn.bootcss.com/audio5js/0.1.10/audio5.min.js"></script>
