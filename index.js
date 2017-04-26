@@ -1,4 +1,6 @@
 (function(){
+  //全局变量window.GRADE
+  window.GRADE = 0;
   // 预加载
   new resLoader({
     presources: [
@@ -347,7 +349,7 @@
           ready: function () {
             this.load('../sounds/temp.mp3');
             // this.load('http://news.sohu.com/upload/yf/trump/bgm2.mp3')
-            this.play();
+            // this.play();
             this.on('timeupdate', function (position, duration) {
               if( position === '00:01' ) {
                 _this.getTimer().getInstance()
@@ -366,5 +368,11 @@
         }
       }
     })(_this)
+  }
+
+  //游戏结束调
+  Stage.prototype.getGrade = function(){
+     window.Grade = parseInt(this.correct/this.alltemp*100)
+     return window.Grade
   }
 })();
