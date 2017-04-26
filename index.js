@@ -54,7 +54,7 @@
       {x: 259, y: 547 },
       {x: 364, y: 637 },
       {x: 528, y: 738 },
-    ]
+    ],
     this.time = 1000;
   }
 
@@ -66,7 +66,7 @@
     this.insTimer = undefined;
     this.insAdo = undefined;
 
-    this.drawMain();
+    this.drawGame();
   }
 
   // 首页
@@ -254,9 +254,26 @@
       bianzi2.visible = true;
       createjs.Tween.get(bianzi2).to({rotation: -10},100).call(handleCompleteB2);
     }
-    blackbg.addEventListener('click', function(e){
+    function handleCompleteFa(){
+      fear.visible = true;
+      hurt.visible = false;
+    }
+    blackbg.addEventListener('mousedown', function(e){
       createjs.Tween.get(bianzi).to({rotation: -80},200).call(handleCompleteB);
       createjs.Tween.get(girl).to({x: 0},100).to({x: 30},100).to({x: 14},100).call(handleComplete);
+      fear.visible = false;
+      hurt.visible = true;
+      createjs.Tween.get(hurt).to({x: 158},100).to({x: 188},100).to({x: 172},100).call(handleCompleteFa);
+      var pos = {
+        x: e.stageX,
+        y: e.stageY
+      }
+      bianzi.x = pos.x + 170;
+      bianzi.y = pos.y - 20;
+      bianzi2.x = bianzi.x;
+      bianzi2.y = bianzi.y + 50;
+      pa.x = bianzi.x - 190;
+      pa.y = bianzi.y + 70;
     });
     var _this = this;
     this.star = this.getBitMap({
@@ -268,6 +285,9 @@
 
     this.stage.addChild(blackbg);
     this.stage.addChild(girl);
+    this.stage.addChild(fear);
+    this.stage.addChild(amaze);
+    this.stage.addChild(hurt);
     this.stage.addChild(cdani);
     this.stage.addChild(bianzi);
     this.stage.addChild(bianzi2);
