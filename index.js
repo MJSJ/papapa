@@ -57,15 +57,15 @@
     ]
     this.time = 1000;
   }
-  
+
   Stage.prototype.init = function(){
     createjs.Touch.enable(this.stage);
     createjs.Ticker.framerate = 60;
     createjs.Ticker.on("tick", this.stage);
 
     this.insTimer = undefined;
-    this.insAdo = undefined;    
-    
+    this.insAdo = undefined;
+
     this.drawMain();
   }
 
@@ -163,7 +163,7 @@
       createjs.Tween.get(finger).to({x: 500, y: 500},600).call(handleCompleteF);
     }
     handleCompleteF4();
-    
+
     this.stage.addChild(blackbg);
     this.stage.addChild(girl);
     this.stage.addChild(fear);
@@ -208,6 +208,22 @@
     var girl = this.getBitMap({
       width: 736, height: 832, x: 14, y: 250, id: 'girl'
     });
+    // 表情
+    var faces = new createjs.SpriteSheet({
+        images: ['../imgs/eyes.png'],
+        frames: {width:89.333, height:99, count: 3},
+        animations: {
+            hurt:0,
+            amaze:1,
+            fear:2
+        }
+    });
+    var fear = new createjs.Sprite(faces, "fear"),
+        amaze = new createjs.Sprite(faces, "amaze"),
+        hurt = new createjs.Sprite(faces, "hurt");
+    fear.x = amaze.x = hurt.x = 172;
+    fear.y = amaze.y = hurt.y = 325;
+    amaze.visible = hurt.visible = false;
     // 鞭子
     var bianzi = this.getBitMap({
       x: 540,y: 580,width: 152,height: 280,regX: 152,regY: 280, id: 'bianzi'
@@ -220,34 +236,33 @@
     });
 
     _this.getAdo().getInstance();
-    // function handleComplete(){}
-    // function handleCompleteP(){
-    //   pa.visible = false;
-    //   pa.scaleX = pa.scaleY = 1;
-    //   pa.alpha = 1;
-    // }
-    // function handleCompleteB2(){
-    //   bianzi.visible = true;
-    //   bianzi2.visible = false;
-    //   pa.visible = true;
-    //   createjs.Tween.get(pa).to({alpha: 0.5, scaleX: 2, scaleY: 2},500).call(handleCompleteP);
-    // }
-    // function handleCompleteB(){
-    //   bianzi.rotation = 0;
-    //   bianzi.visible = false;
-    //   bianzi2.visible = true;
-    //   createjs.Tween.get(bianzi2).to({rotation: -10},100).call(handleCompleteB2);
-    // }
-    // blackbg.addEventListener('click', function(e){
-    //   createjs.Tween.get(bianzi).to({rotation: -80},200).call(handleCompleteB);
-    //   createjs.Tween.get(girl).to({x: 0},100).to({x: 30},100).to({x: 14},100).call(handleComplete);
-    // });
+    function handleComplete(){}
+    function handleCompleteP(){
+      pa.visible = false;
+      pa.scaleX = pa.scaleY = 1;
+      pa.alpha = 1;
+    }
+    function handleCompleteB2(){
+      bianzi.visible = true;
+      bianzi2.visible = false;
+      pa.visible = true;
+      createjs.Tween.get(pa).to({alpha: 0.5, scaleX: 2, scaleY: 2},500).call(handleCompleteP);
+    }
+    function handleCompleteB(){
+      bianzi.rotation = 0;
+      bianzi.visible = false;
+      bianzi2.visible = true;
+      createjs.Tween.get(bianzi2).to({rotation: -10},100).call(handleCompleteB2);
+    }
+    blackbg.addEventListener('click', function(e){
+      createjs.Tween.get(bianzi).to({rotation: -80},200).call(handleCompleteB);
+      createjs.Tween.get(girl).to({x: 0},100).to({x: 30},100).to({x: 14},100).call(handleComplete);
+    });
     var _this = this;
     this.star = this.getBitMap({
       x: 0, y: 0, width: 146, height: 134, visible: false, id: 'star', regX: 73, regY: 67
     });
-    blackbg.addEventListener('mousedown', function(e){
-      alert("!")
+    this.star.addEventListener('mousedown', function(e){
       _this.correct++;
     });
 
@@ -291,7 +306,7 @@
       _this.star.y = pos.y;
       createjs.Tween.get(this.star).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},200).call(handleCompleteP);
     }else{
-      
+
     }
   }
 
