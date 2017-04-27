@@ -68,7 +68,13 @@
     this.insTimer = undefined;
     this.insAdo = undefined;
 
-    this.drawGame();
+    var _this = this;
+    $(document).on("touchstart", ".again", function(e){
+      $(".resultBox").hide();
+      _this.drawGame();
+    });
+
+    this.drawMain();
   }
 
   // 首页
@@ -189,6 +195,8 @@
     _this.stage.removeAllChildren();
     _this.correct = 0;
     _this.alltemp = 0;
+    _this.insAdo = undefined;
+    _this.insTimer = undefined;
     // 背景
     var blackbg = this.getBitMap({
       x: 0, y: 0, width: 750, height: 1336, id: 'bg1'
@@ -260,7 +268,7 @@
       fear.visible = true;
       hurt.visible = false;
     }
-    blackbg.addEventListener('mousedown', function(e){
+    function paAnimation(e){
       createjs.Tween.get(bianzi).to({rotation: -80},200).call(handleCompleteB);
       createjs.Tween.get(girl).to({x: 0},100).to({x: 30},100).to({x: 14},100).call(handleComplete);
       fear.visible = false;
@@ -276,6 +284,9 @@
       bianzi2.y = bianzi.y + 50;
       pa.x = bianzi.x - 190;
       pa.y = bianzi.y + 70;
+    }
+    blackbg.addEventListener('mousedown', function(e){
+      paAnimation(e);
     });
     var _this = this;
     this.star = this.getBitMap({
@@ -283,6 +294,7 @@
     });
     this.star.addEventListener('mousedown', function(e){
       _this.correct++;
+      paAnimation(e);
     });
 
     this.stage.addChild(blackbg);
@@ -326,7 +338,7 @@
       var pos = _this.dire[parseInt(Math.random()*3)]
       _this.star.x = pos.x;
       _this.star.y = pos.y;
-      createjs.Tween.get(this.star).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},200).call(handleCompleteP);
+      createjs.Tween.get(this.star).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},500).call(handleCompleteP);
     }else{
 
     }
@@ -338,9 +350,11 @@
     return (function(_this){
       function init(){
         var timer = setInterval(function(){
-          if(_this.time >　24000){
+          if(_this.time >　10000){
             clearInterval(timer)
-            alert(_this.correct +' '+ _this.alltemp)
+            _this.insAdo.pause()
+            window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
+            View.showResult()
           }else{
             _this.time += 20
             _this.checkTemp()
@@ -368,8 +382,7 @@
         var audio = new Audio5js({
           ready: function () {
             this.load('../sounds/temp.mp3');
-            // this.load('http://news.sohu.com/upload/yf/trump/bgm2.mp3')
-            // this.play();
+            this.play();
             this.on('timeupdate', function (position, duration) {
               if( position === '00:01' ) {
                 _this.getTimer().getInstance()

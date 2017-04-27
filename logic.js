@@ -20,10 +20,6 @@
         $(".shareBtn").on("touchstart",function(){
             View.showShare();
         })
-        $(".agian").on("touchstart",function(){
-            //游戏重新开始逻辑
-            // View.showGame();
-        })
         $(".jump").on("touchstart",function(){
             window.location.href = JUMPURL;
         })
