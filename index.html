@@ -7,7 +7,7 @@
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="yes" name="apple-touch-fullscreen" />
   <meta content="telephone=no,email=no" name="format-detection" />
-  <title>PAPAPA</title>
+  <title>啪啪啪，男人就该久一点</title>
   <link rel="stylesheet" href="../static/index.css">
 </head>
 <body ontouchstart="event.preventDefault();">
@@ -18,13 +18,11 @@
   </div>
   <div class="main">
     <canvas id="stage" class="stage" width="750" height="1335"></canvas>
-    <img src="../imgs/bianzi.png"  alt="">
     <div class="share">
       <div class="sharebg">
         <img src="../imgs/erweima.png" alt="">
       </div>
     </div>
-
     <div class="resultBox">
       <div class="resultWraper">
         <div class="grade"></div>
@@ -34,7 +32,7 @@
       </div>
     </div>
   </div>
-  <img src="../imgs/finger.png" alt="">
+  <!--<img src="../imgs/finger.png" alt="">-->
   <script type="text/javascript">
   function pageUtil(selector){
       this.ele = document.querySelectorAll(selector)[0];
@@ -54,55 +52,53 @@
   <script src="../static/logic.js"></script>
   <script>
     // 分享
-    (function(win){
-        var  imgUrl = "http://i3.itc.cn/20160718/3707_0fc861c7_f0f5_301b_1179_c34747820e31_1.jpg";
-        var link = win.href;
-        win.title = "分享标题";
-        win.content = "分享语";
-        appid = '';
-        gSound = '';
-        function shareFriend() {
-            WeixinJSBridge.invoke("sendAppMessage", {
-                appid: appid,
-                img_url: imgUrl,
-                img_width: "200",
-                img_height: "200",
-                link: link,
-                desc: win.content,
-                title: win.title
-            }, function(b) {});
-        }
+    var imgUrl = "http://www.mykrystal.com/assets/pa/imgs/share.jpg";
+    var link = window.location.href;
+    var title = "啪啪啪，男人就该久一点!";
+    window.content = "哈哈哈，我的啪啪啪持久度超过了0%的人，你也来挑战一下吧！";
+    appid = '';
+    gSound = '';
+    function shareFriend() {
+        WeixinJSBridge.invoke("sendAppMessage", {
+            appid: appid,
+            img_url: imgUrl,
+            img_width: "200",
+            img_height: "200",
+            link: link,
+            desc: window.content,
+            title: title
+        }, function(b) {});
+    }
 
-        function shareTimeline() {
-            WeixinJSBridge.invoke("shareTimeline", {
-                appid: appid,
-                img_url: imgUrl,
-                img_width: "200",
-                img_height: "200",
-                link: link,
-                desc: win.content,
-                title: win.title
-            }, function(b) {});
-        }
+    function shareTimeline() {
+        WeixinJSBridge.invoke("shareTimeline", {
+            appid: appid,
+            img_url: imgUrl,
+            img_width: "200",
+            img_height: "200",
+            link: link,
+            desc: window.content,
+            title: title
+        }, function(b) {});
+    }
 
-        function shareWeibo() {
-            WeixinJSBridge.invoke("shareWeibo", {
-                content: content,
-                url: link
-            }, function(b) {});
-        }
-        document.addEventListener("WeixinJSBridgeReady", function onBridgeReady() {
-            WeixinJSBridge.on("menu:share:appmessage", function(b) {
-                shareFriend();
-            });
-            WeixinJSBridge.on("menu:share:timeline", function(b) {
-                shareTimeline();
-            });
-            WeixinJSBridge.on("menu:share:weibo", function(b) {
-                shareWeibo();
-            });
-        }, false);
-    })(window);
+    function shareWeibo() {
+        WeixinJSBridge.invoke("shareWeibo", {
+            content: window.content,
+            url: link
+        }, function(b) {});
+    }
+    document.addEventListener("WeixinJSBridgeReady", function onBridgeReady() {
+        WeixinJSBridge.on("menu:share:appmessage", function(b) {
+            shareFriend();
+        });
+        WeixinJSBridge.on("menu:share:timeline", function(b) {
+            shareTimeline();
+        });
+        WeixinJSBridge.on("menu:share:weibo", function(b) {
+            shareWeibo();
+        });
+    }, false);
   </script>
 </body>
 </html>

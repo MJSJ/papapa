@@ -28,7 +28,8 @@
         { "id": "bianzi2", "src": "../imgs/bianzi2.png" },
         { "id": "pabtn", "src": "../imgs/beginbtn.png" },
         { "id": "pa", "src": "../imgs/pa.png" },
-        { "id": "star", "src": "../imgs/star.png" }
+        { "id": "star", "src": "../imgs/star.png" },
+        { "id": "prod", "src": "../imgs/prod.jpg" }
       ]);
       function handleFileComplete() {
         if(preload._numItems == preload._numItemsLoaded){
@@ -55,7 +56,7 @@
     this.dire = [
       {x: 259, y: 547 },
       {x: 364, y: 637 },
-      {x: 528, y: 738 },
+      {x: 500, y: 640 }
     ],
     this.time = 1000;
   }
@@ -69,10 +70,10 @@
     this.insAdo = undefined;
 
     var _this = this;
-    $(document).on("touchstart", ".again", function(e){
+    this.ontouchAgain = function(e){
       $(".resultBox").hide();
       _this.drawGame();
-    });
+    }
 
     this.drawMain();
   }
@@ -172,7 +173,19 @@
     }
     handleCompleteF4();
 
+    // 产品图
+    var prod = this.getBitMap({
+      x: 560, y: 20, width: 800, height: 800, id: 'prod'
+    })
+    prod.scaleX = prod.scaleY = 0.2;
+    var prodText = new createjs.Text("王室佳宝", "30px Arial bold", "#ff7700");
+    prodText.x = 580;
+    prodText.y = 220;
+    prodText.textBaseline = "alphabetic";
+
     this.stage.addChild(blackbg);
+    this.stage.addChild(prod);
+    this.stage.addChild(prodText);
     this.stage.addChild(girl);
     this.stage.addChild(fear);
     this.stage.addChild(amaze);
@@ -185,16 +198,19 @@
     // 点击开始
     _this = this;
     blackbg.addEventListener('click', function(e){
-      _this.drawFengmian();
+      _this.drawGame();
     });
   }
 
   // 游戏页
   Stage.prototype.drawGame = function(){
     _this = this;
+    $(document).off("touchstart", ".again", _this.ontouchAgain)
     _this.stage.removeAllChildren();
     _this.correct = 0;
-    _this.alltemp = 0;
+    _this.alltemp = 50;
+    _this.cur = 0;
+    _this.tp = 1;
     _this.insAdo = undefined;
     _this.insTimer = undefined;
     // 背景
@@ -244,6 +260,7 @@
     pa = this.getBitMap({
       x: 350,y: 650,width: 187,regX: 83.5,regY: 90.5,visible: false, id: 'pa'
     });
+    bianzi.visible = false
 
     _this.getAdo().getInstance();
     function handleComplete(){}
@@ -255,8 +272,10 @@
     function handleCompleteB2(){
       bianzi.visible = true;
       bianzi2.visible = false;
-      pa.visible = true;
-      createjs.Tween.get(pa).to({alpha: 0.5, scaleX: 2, scaleY: 2},500).call(handleCompleteP);
+      if(_this.tp == 2){
+        pa.visible = true;
+        createjs.Tween.get(pa).to({alpha: 0.5, scaleX: 2, scaleY: 2},500).call(handleCompleteP);
+      }
     }
     function handleCompleteB(){
       bianzi.rotation = 0;
@@ -268,7 +287,8 @@
       fear.visible = true;
       hurt.visible = false;
     }
-    function paAnimation(e){
+    this.paAnimation = function(e){
+      bianzi.visible = true
       createjs.Tween.get(bianzi).to({rotation: -80},200).call(handleCompleteB);
       createjs.Tween.get(girl).to({x: 0},100).to({x: 30},100).to({x: 14},100).call(handleComplete);
       fear.visible = false;
@@ -286,18 +306,36 @@
       pa.y = bianzi.y + 70;
     }
     blackbg.addEventListener('mousedown', function(e){
-      paAnimation(e);
-    });
-    var _this = this;
+      if(_this.cur > 0){
+        _this.tp = 1;
+        _this.paAnimation(e);
+      }
+    })
+    var _this = this
     this.star = this.getBitMap({
       x: 0, y: 0, width: 146, height: 134, visible: false, id: 'star', regX: 73, regY: 67
-    });
+    })
     this.star.addEventListener('mousedown', function(e){
-      _this.correct++;
-      paAnimation(e);
-    });
+      if(_this.cur > 0){
+        _this.correct++;
+        _this.tp = 2;
+        _this.paAnimation(e);
+      }
+    })
+
+    // 产品图
+    var prod = this.getBitMap({
+      x: 560, y: 20, width: 800, height: 800, id: 'prod'
+    })
+    prod.scaleX = prod.scaleY = 0.2;
+    var prodText = new createjs.Text("王室佳宝", "30px Arial bold", "#ff7700");
+    prodText.x = 580;
+    prodText.y = 220;
+    prodText.textBaseline = "alphabetic";
 
     this.stage.addChild(blackbg);
+    this.stage.addChild(prod);
+    this.stage.addChild(prodText);
     this.stage.addChild(girl);
     this.stage.addChild(fear);
     this.stage.addChild(amaze);
@@ -331,17 +369,34 @@
       _this.star.visible = false;
       _this.star.scaleX = _this.star.scaleY = 1;
       _this.star.alpha = 1;
+      _this.cur++;
+      if( (_this.cur !== _this.correct && _this.cur !== 0) || _this.correct === 50){
+        // 游戏结束
+        clearInterval(_this.insTimer)
+        _this.insAdo.pause()
+        window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
+        View.showResult()
+        setTimeout(function(){
+          $(document).on("touchstart", ".again", _this.ontouchAgain)
+        }, 2000);
+      }
     }
     if(this.time % 900 == 100){
-      _this.alltemp++;
       _this.star.visible = true;
       var pos = _this.dire[parseInt(Math.random()*3)]
       _this.star.x = pos.x;
       _this.star.y = pos.y;
       createjs.Tween.get(this.star).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},500).call(handleCompleteP);
-    }else{
-
-    }
+      if(_this.cur === 0){
+        // 游戏提示
+        _this.tp = 2
+        _this.correct = 1
+        _this.paAnimation({
+          stageX: pos.x,
+          stageY: pos.y
+        })
+      }
+    }else{}
   }
 
   // 单例Timer
@@ -351,10 +406,10 @@
       function init(){
         var timer = setInterval(function(){
           if(_this.time >　50000){
-            clearInterval(timer)
-            _this.insAdo.pause()
-            window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
-            View.showResult()
+            // clearInterval(timer)
+            // _this.insAdo.pause()
+            // window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
+            // View.showResult()
           }else{
             _this.time += 20
             _this.checkTemp()

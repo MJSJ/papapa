@@ -11,6 +11,11 @@
         //index里调View.showGrade();
         showGrade:function(grade){
             $(".grade").html(grade)
+            if(grade == 100){
+                window.content = '我艹，根本停不下来，我的啪啪啪持久度已经突破了天际，不服来战！'
+            }else{
+                window.content = '哈哈哈，我的啪啪啪持久度超过了'+grade+'%的人，你也来挑战一下吧！'
+            }
         }
     }
 
@@ -21,7 +26,7 @@
             View.showShare();
         })
         $(".jump").on("touchstart",function(){
-            window.location.href = JUMPURL;
+            $(".share").show();
         })
 
         $(".share").on("touchstart",function(){
