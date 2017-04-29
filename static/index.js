@@ -110,7 +110,7 @@
     // 蜡烛
     var cdSheet = new createjs.SpriteSheet({
         images: ['../imgs/candles.png'],
-        frames: {width:99, height:194, count: 2},
+        frames: {width:182, height:222.5, count: 2},
         animations: {
             burn:{
               frames: [0,1],
@@ -185,7 +185,7 @@
     // 点击开始
     _this = this;
     blackbg.addEventListener('click', function(e){
-      _this.drawGame();
+      _this.drawFengmian();
     });
   }
 
@@ -204,7 +204,7 @@
     // 蜡烛
     var cdSheet = new createjs.SpriteSheet({
         images: ['../imgs/candles.png'],
-        frames: {width:99, height:194, count: 2},
+        frames: {width:182, height:222.5, count: 2},
         animations: {
             burn:{
               frames: [0,1],
@@ -350,7 +350,7 @@
     return (function(_this){
       function init(){
         var timer = setInterval(function(){
-          if(_this.time >　10000){
+          if(_this.time >　50000){
             clearInterval(timer)
             _this.insAdo.pause()
             window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
@@ -387,6 +387,10 @@
               if( position === '00:01' ) {
                 _this.getTimer().getInstance()
               }
+            }, this);
+            var _theado = this;
+            this.on('ended', function (){
+              _theado.play();
             }, this);
           }
         });

@@ -8,7 +8,7 @@
   <meta content="yes" name="apple-touch-fullscreen" />
   <meta content="telephone=no,email=no" name="format-detection" />
   <title>PAPAPA</title>
-  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../static/index.css">
 </head>
 <body ontouchstart="event.preventDefault();">
   <div id="loading" class="loading">
@@ -34,7 +34,7 @@
       </div>
     </div>
   </div>
-  <!--<img src="../imgs/girl.png" alt="">-->
+  <img src="../imgs/finger.png" alt="">
   <script type="text/javascript">
   function pageUtil(selector){
       this.ele = document.querySelectorAll(selector)[0];
@@ -50,7 +50,59 @@
   <script src="http://cdn.bootcss.com/audio5js/0.1.10/audio5.min.js"></script>
   <script src="http://news.sohu.com/upload/yf/pub/zepto-1.1.6-reload.js"></script>
   <script src="http://news.sohu.com/upload/yf/pub/create.min.js"></script>
-  <script src="../index.js"></script>
-  <script src="./logic.js"></script>
+  <script src="../static/index.js"></script>
+  <script src="../static/logic.js"></script>
+  <script>
+    // 分享
+    (function(win){
+        var  imgUrl = "http://i3.itc.cn/20160718/3707_0fc861c7_f0f5_301b_1179_c34747820e31_1.jpg";
+        var link = win.href;
+        win.title = "分享标题";
+        win.content = "分享语";
+        appid = '';
+        gSound = '';
+        function shareFriend() {
+            WeixinJSBridge.invoke("sendAppMessage", {
+                appid: appid,
+                img_url: imgUrl,
+                img_width: "200",
+                img_height: "200",
+                link: link,
+                desc: win.content,
+                title: win.title
+            }, function(b) {});
+        }
+
+        function shareTimeline() {
+            WeixinJSBridge.invoke("shareTimeline", {
+                appid: appid,
+                img_url: imgUrl,
+                img_width: "200",
+                img_height: "200",
+                link: link,
+                desc: win.content,
+                title: win.title
+            }, function(b) {});
+        }
+
+        function shareWeibo() {
+            WeixinJSBridge.invoke("shareWeibo", {
+                content: content,
+                url: link
+            }, function(b) {});
+        }
+        document.addEventListener("WeixinJSBridgeReady", function onBridgeReady() {
+            WeixinJSBridge.on("menu:share:appmessage", function(b) {
+                shareFriend();
+            });
+            WeixinJSBridge.on("menu:share:timeline", function(b) {
+                shareTimeline();
+            });
+            WeixinJSBridge.on("menu:share:weibo", function(b) {
+                shareWeibo();
+            });
+        }, false);
+    })(window);
+  </script>
 </body>
 </html>
