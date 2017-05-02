@@ -4,7 +4,8 @@
   // 预加载
   new resLoader({
     presources: [
-      'http://news.sohu.com/upload/yf/trump/imgs/bg01.jpg'
+      '../imgs/sharebg.png',
+      '../imgs/sharegd.png'
     ],
     resources: [],
     onProgress: function(current, total) {
@@ -22,14 +23,17 @@
         { "id": "bg1", "src": "../imgs/bg1.jpg" },
         { "id": "girl", "src": "../imgs/girl.png" },
         { "id": "eyes", "src": "../imgs/eyes.png" },
-        { "id": "candle1", "src": "../imgs/candles.png" },
+        { "id": "candle1", "src": "../imgs/cd1.png" },
+        { "id": "candle2", "src": "../imgs/cd2.png" },
         { "id": "finger", "src": "../imgs/finger.png" },
         { "id": "bianzi", "src": "../imgs/bianzi.png" },
         { "id": "bianzi2", "src": "../imgs/bianzi2.png" },
         { "id": "pabtn", "src": "../imgs/beginbtn.png" },
         { "id": "pa", "src": "../imgs/pa.png" },
         { "id": "star", "src": "../imgs/star.png" },
-        { "id": "prod", "src": "../imgs/prod.jpg" }
+        { "id": "prod", "src": "../imgs/prod.png" },
+        { "id": "go", "src": "../imgs/go.png" },
+        { "id": "ready", "src": "../imgs/ready.png" }
       ]);
       function handleFileComplete() {
         if(preload._numItems == preload._numItemsLoaded){
@@ -75,7 +79,7 @@
       _this.drawGame();
     }
 
-    this.drawMain();
+    this.drawFengmian();
   }
 
   // 首页
@@ -110,8 +114,8 @@
     function handleComplete() {}
     // 蜡烛
     var cdSheet = new createjs.SpriteSheet({
-        images: ['../imgs/candles.png'],
-        frames: {width:182, height:222.5, count: 2},
+        images: ['../imgs/cd1.png', '../imgs/cd2.png'],
+        frames: {width:156, height:239, count: 2},
         animations: {
             burn:{
               frames: [0,1],
@@ -205,6 +209,8 @@
   // 游戏页
   Stage.prototype.drawGame = function(){
     _this = this;
+    _this.stage.alpha = 0.7;
+    $('.sharegd').hide();
     $(document).off("touchstart", ".again", _this.ontouchAgain)
     _this.stage.removeAllChildren();
     _this.correct = 0;
@@ -213,14 +219,29 @@
     _this.tp = 1;
     _this.insAdo = undefined;
     _this.insTimer = undefined;
+    this.pa0 = new Audio5js({
+      ready: function () {
+        this.load('../sounds/pa0.mp3');
+      }
+    }),
+    this.pa1 = new Audio5js({
+      ready: function () {
+        this.load('../sounds/pa1.mp3');
+      }
+    }),
+    this.pa2 = new Audio5js({
+      ready: function () {
+        this.load('../sounds/pa2.mp3');
+      }
+    })
     // 背景
     var blackbg = this.getBitMap({
       x: 0, y: 0, width: 750, height: 1336, id: 'bg1'
     });
     // 蜡烛
     var cdSheet = new createjs.SpriteSheet({
-        images: ['../imgs/candles.png'],
-        frames: {width:182, height:222.5, count: 2},
+        images: ['../imgs/cd1.png', '../imgs/cd2.png'],
+        frames: {width:156, height:239, count: 2},
         animations: {
             burn:{
               frames: [0,1],
@@ -288,6 +309,8 @@
       hurt.visible = false;
     }
     this.paAnimation = function(e){
+      var pan = parseInt(Math.random()*3)
+      _this['pa' + pan].play()
       bianzi.visible = true
       createjs.Tween.get(bianzi).to({rotation: -80},200).call(handleCompleteB);
       createjs.Tween.get(girl).to({x: 0},100).to({x: 30},100).to({x: 14},100).call(handleComplete);
@@ -332,6 +355,15 @@
     prodText.x = 580;
     prodText.y = 220;
     prodText.textBaseline = "alphabetic";
+    // ready go
+    _this.ready = this.getBitMap({
+      x: 375, y: 450, width: 205, height: 69,regX: 102.5,regY: 23, visible: false, alpha: 0, id: 'ready'
+    })
+    _this.go = this.getBitMap({
+      x: 375, y: 450, width: 107, height: 75,regX: 53.5,regY: 37.5, visible: false, alpha: 0, id: 'go'
+    })
+    _this.ready.visible = true
+    createjs.Tween.get(_this.ready).to({alpha: 1, scaleX: 1.5, scaleY: 1.5},500).call(handleComplete);
 
     this.stage.addChild(blackbg);
     this.stage.addChild(prod);
@@ -345,6 +377,8 @@
     this.stage.addChild(bianzi2);
     this.stage.addChild(pa);
     this.stage.addChild(this.star);
+    this.stage.addChild(this.ready);
+    this.stage.addChild(this.go);
   }
 
   // 获取bitmap
@@ -365,6 +399,10 @@
   // 寻找节奏
   Stage.prototype.checkTemp = function(){
     var _this = this;
+    function handleComplete(){}
+    function handleCompleteG(){
+      _this.go.visible = false
+    }
     function handleCompleteP(){
       _this.star.visible = false;
       _this.star.scaleX = _this.star.scaleY = 1;
@@ -389,6 +427,11 @@
       createjs.Tween.get(this.star).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},500).call(handleCompleteP);
       if(_this.cur === 0){
         // 游戏提示
+        this.ready.visible = false
+        this.go.visible = true
+        createjs.Tween.get(this.go).to({alpha: 1, scaleX: 1.5, scaleY: 1.5},200).call(handleCompleteG);
+        this.stage.alpha = 1;
+        createjs.Tween.get(this.stage, {loop: true}).to({alpha: 0.7},400).to({alpha: 1},400).to({alpha: 0.7},400).to({alpha: 1},400).call(handleComplete);
         _this.tp = 2
         _this.correct = 1
         _this.paAnimation({
@@ -406,10 +449,13 @@
       function init(){
         var timer = setInterval(function(){
           if(_this.time >　50000){
-            // clearInterval(timer)
-            // _this.insAdo.pause()
-            // window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
-            // View.showResult()
+            clearInterval(_this.insTimer)
+            _this.insAdo.pause()
+            window.GRADE = 100
+            View.showResult()
+            setTimeout(function(){
+              $(document).on("touchstart", ".again", _this.ontouchAgain)
+            }, 2000);
           }else{
             _this.time += 20
             _this.checkTemp()

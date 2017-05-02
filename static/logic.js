@@ -23,7 +23,7 @@
     function bindEvts(){
 
         $(".shareBtn").on("touchstart",function(){
-            View.showShare();
+            $('.sharegd').show();
         })
         $(".jump").on("touchstart",function(){
             $(".share").show();

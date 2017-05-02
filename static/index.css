@@ -182,3 +182,75 @@ html, body{
   left:0;
   position:absolute;
 }
+
+.sharegd{
+  display: none;
+  position: absolute;
+  right: 100px;
+  top: 50px;
+  width: 120px;
+  height: 121px;
+  background: url('../imgs/sharegd.png') no-repeat;
+  animation: point linear 2s infinite backwards;
+  -webkit-animation: point linear 2s infinite backwards;
+}
+@keyframes point{
+  0%{
+    top: 50px;
+    right: 100px;
+  }
+  20%{
+    top: 0px;
+    right: 50px;
+  }
+  40%{
+    top: 50px;
+    right: 100px;
+  }
+  60%{
+    top: 0;
+    right: 50px;
+  }
+  80%{
+    top: 50px;
+    right: 100px;
+  }
+  100%{
+    top: 50px;
+    right: 100px;
+  }
+}
+@-webkit-keyframes point{
+  0%{
+    top: 50px;
+    right: 100px;
+  }
+  20%{
+    top: 0px;
+    right: 50px;
+  }
+  40%{
+    top: 50px;
+    right: 100px;
+  }
+  60%{
+    top: 0;
+    right: 50px;
+  }
+  80%{
+    top: 50px;
+    right: 100px;
+  }
+  100%{
+    top: 50px;
+    right: 100px;
+  }
+}
+.mask{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
