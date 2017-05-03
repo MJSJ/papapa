@@ -58,8 +58,8 @@
     this.alltemp = 0, // 节奏总数
     this.correct = 0, // 踩对的节奏数
     this.dire = [
-      {x: 259, y: 547 },
-      {x: 364, y: 637 },
+      {x: 240, y: 530 },
+      {x: 355, y: 620 },
       {x: 500, y: 640 }
     ],
     this.time = 1000;
@@ -216,6 +216,7 @@
     _this.correct = 0;
     _this.alltemp = 50;
     _this.cur = 0;
+    _this.dura = 2000;
     _this.tp = 1;
     _this.insAdo = undefined;
     _this.insTimer = undefined;
@@ -293,9 +294,9 @@
     function handleCompleteB2(){
       bianzi.visible = true;
       bianzi2.visible = false;
-      if(_this.tp == 2){
+      if(_this.tp == 2 && _this.cur > 1){
         pa.visible = true;
-        createjs.Tween.get(pa).to({alpha: 0.5, scaleX: 2, scaleY: 2},500).call(handleCompleteP);
+        createjs.Tween.get(pa).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},200).call(handleCompleteP);
       }
     }
     function handleCompleteB(){
@@ -419,7 +420,10 @@
         }, 2000);
       }
     }
-    if(this.time % 900 == 100){
+    if(this.time % this.dura == 0){
+      if( this.dura >= 1000 ) this.dura -= 60;
+      else{ this.dura = 1000; }
+      console.log(this.dura)
       _this.star.visible = true;
       var pos = _this.dire[parseInt(Math.random()*3)]
       _this.star.x = pos.x;
