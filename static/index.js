@@ -187,6 +187,30 @@
     prodText.y = 220;
     prodText.textBaseline = "alphabetic";
 
+    // 游戏提示
+    var star = this.getBitMap({
+      x: 450, y: 320, width: 146, height: 134, id: 'star', regX: 73, regY: 67
+    })
+    var prodText1 = new createjs.Text("出现", "30px Arial bold", "#ffffff");
+    prodText1.x = 330;
+    prodText1.y = 360;
+    prodText1.textBaseline = "alphabetic";
+    var prodText2 = new createjs.Text("时立即点击", "30px Arial bold", "#ffffff");
+    prodText2.x = 520;
+    prodText2.y = 360;
+    prodText2.textBaseline = "alphabetic";
+    var prodText4 = new createjs.Text("点中就会出现", "30px Arial bold", "#ffffff");
+    prodText4.x = 420;
+    prodText4.y = 460;
+    prodText4.textBaseline = "alphabetic";
+    var pa = this.getBitMap({
+      x: 680,y: 450,width: 187,regX: 83.5,regY: 90.5, id: 'pa'
+    })
+    var prodText3 = new createjs.Text("错过则游戏结束", "30px Arial bold", "#ffffff");
+    prodText3.x = 500;
+    prodText3.y = 550;
+    prodText3.textBaseline = "alphabetic";
+
     this.stage.addChild(blackbg);
     this.stage.addChild(prod);
     this.stage.addChild(prodText);
@@ -198,6 +222,13 @@
     this.stage.addChild(bianzi);
     this.stage.addChild(finger);
     this.stage.addChild(pabtn);
+
+    this.stage.addChild(star);
+    this.stage.addChild(prodText1);
+    this.stage.addChild(prodText2);
+    this.stage.addChild(prodText3);
+    this.stage.addChild(prodText4);
+    this.stage.addChild(pa);
 
     // 点击开始
     _this = this;
@@ -217,6 +248,7 @@
     _this.alltemp = 50;
     _this.cur = 0;
     _this.dura = 2000;
+    _this.nextT = 2000;
     _this.tp = 1;
     _this.insAdo = undefined;
     _this.insTimer = undefined;
@@ -409,21 +441,37 @@
       _this.star.scaleX = _this.star.scaleY = 1;
       _this.star.alpha = 1;
       _this.cur++;
-      if( (_this.cur !== _this.correct && _this.cur !== 0) || _this.correct === 50){
+      if( (_this.cur !== _this.correct && _this.cur !== 0) && _this.correct < 41 ){
         // 游戏结束
         clearInterval(_this.insTimer)
         _this.insAdo.pause()
-        window.GRADE = parseInt((_this.correct / _this.alltemp)*100)
+        window.GRADE = parseInt( _this.correct * (100/41) )
+        if( _this.correct <= 15 ){
+          window.PERC = _this.correct * (20/15);
+        }else if( _this.correct > 15 && _this.correct <= 30 ){
+          window.PERC = 20 + (_this.correct - 15) * (60/15);
+        }else if( _this.correct > 30 && _this.correct <= 50 ){
+          window.PERC = 80 + (_this.correct - 30) * (20/11);
+        }
+        window.PERC = parseInt(window.PERC)
         View.showResult()
         setTimeout(function(){
           $(document).on("touchstart", ".again", _this.ontouchAgain)
         }, 2000);
       }
     }
-    if(this.time % this.dura == 0){
-      if( this.dura >= 1000 ) this.dura -= 60;
-      else{ this.dura = 1000; }
-      console.log(this.dura)
+    if( this.time == 1500 ){
+      this.ready.visible = false
+      this.go.visible = true
+      createjs.Tween.get(this.go).to({alpha: 1, scaleX: 1.5, scaleY: 1.5},200).call(handleCompleteG);
+    }
+    if( this.time == this.dura ){
+      if( this.nextT > 1000 ) {
+        this.nextT -= 60;
+      }
+      else{ this.nextT = 1000; }
+      this.dura = this.time + this.nextT;
+      // console.log(this.dura)
       _this.star.visible = true;
       var pos = _this.dire[parseInt(Math.random()*3)]
       _this.star.x = pos.x;
@@ -431,9 +479,6 @@
       createjs.Tween.get(this.star).to({alpha: 0.5, scaleX: 1.5, scaleY: 1.5},500).call(handleCompleteP);
       if(_this.cur === 0){
         // 游戏提示
-        this.ready.visible = false
-        this.go.visible = true
-        createjs.Tween.get(this.go).to({alpha: 1, scaleX: 1.5, scaleY: 1.5},200).call(handleCompleteG);
         this.stage.alpha = 1;
         createjs.Tween.get(this.stage, {loop: true}).to({alpha: 0.7},400).to({alpha: 1},400).to({alpha: 0.7},400).to({alpha: 1},400).call(handleComplete);
         _this.tp = 2
@@ -452,10 +497,11 @@
     return (function(_this){
       function init(){
         var timer = setInterval(function(){
-          if(_this.time >　50000){
+          if(_this.correct == 41){
             clearInterval(_this.insTimer)
             _this.insAdo.pause()
             window.GRADE = 100
+            window.PERC = 100
             View.showResult()
             setTimeout(function(){
               $(document).on("touchstart", ".again", _this.ontouchAgain)

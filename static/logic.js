@@ -5,16 +5,17 @@
             $(".share").show();
         },
         showResult:function(){
-            View.showGrade(window.GRADE);
+            View.showGrade(window.GRADE, window.PERC);
             $(".resultBox").show();
         },
         //index里调View.showGrade();
-        showGrade:function(grade){
+        showGrade:function(grade, p){
             $(".grade").html(grade)
+            $(".grade2").html(p)
             if(grade == 100){
-                window.content = '我艹，根本停不下来，我的啪啪啪持久度已经突破了天际，不服来战！'
+                window.content = '状态太好了，再来一次'
             }else{
-                window.content = '哈哈哈，我的啪啪啪持久度超过了'+grade+'%的人，你也来挑战一下吧！'
+                window.content = '我还能更久点，再来一次'
             }
         }
     }
